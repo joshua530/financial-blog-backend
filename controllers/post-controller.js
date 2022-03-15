@@ -153,18 +153,24 @@ const updatePost = asyncHandler(async (req, res) => {
 });
 
 /**
- * DELETE /api/v1/posts/:slug/delete
+ * @does deletes post
+ * @route DELETE /api/v1/posts/:post_slug/delete
+ * @protected true
  */
 const deletePost = asyncHandler(async (req, res) => {
-  // TODO user auth and user is owner of post
-  const slug = req.params.slug;
-  Post.deleteOne({ slug }, (err) => {
-    if (err) {
-      res.status(400);
-      throw new Error(`Post with slug "${slug}" does not exist`);
-    }
-    res.status(200);
-  });
+  const slug = req.params.post_slug;
+  const post = await Post.findOne({ slug });
+  const userSlug = req.userSlug;
+  if (post.userSlug !== userSlug) {
+    res.status(403).send('403 forbidden');
+    return;
+  }
+  const result = await Post.deleteOne({ slug });
+  if (result.deletedCount !== 1) {
+    res.status(400);
+    throw new Error('post deletion failed');
+  }
+  res.status(200).json({ success: 'post deleted successfully' });
 });
 
 /**

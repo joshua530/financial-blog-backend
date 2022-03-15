@@ -15,7 +15,8 @@ app.use(
   [
     '/api/v1/profile/:slug/update',
     '/api/v1/posts/new',
-    '/api/v1/posts/:post_slug/update'
+    '/api/v1/posts/:post_slug/update',
+    '/api/v1/posts/:post_slug/delete'
   ],
   authMiddleware
 );
