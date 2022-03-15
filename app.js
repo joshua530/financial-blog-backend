@@ -3,6 +3,7 @@ const color = require('colors');
 const errorHandler = require('./middleware/error-handler');
 const dotenv = require('dotenv').config();
 const connectDb = require('./config/db');
+const authMiddleware = require('./middleware/auth-middleware');
 
 const app = express();
 
@@ -10,6 +11,7 @@ connectDb();
 
 // middleware
 app.use(express.json());
+app.use(authMiddleware);
 
 app.use('/api/v1/about', require('./routes/about-route'));
 app.use('/api/v1/login', require('./routes/login-route'));
