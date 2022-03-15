@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(
   [
     '/api/v1/comments/create',
-    '/api/v1/comments/delete',
+    '/api/v1/comments/delete/:id',
     '/api/v1/profile/:slug/update',
     '/api/v1/profile/:slug/update-password',
     '/api/v1/posts/new',
