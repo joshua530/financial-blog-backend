@@ -174,13 +174,23 @@ const deletePost = asyncHandler(async (req, res) => {
 });
 
 /**
- * GET /api/v1/posts/:slug
+ * @does gets posts belonging to a certain user
+ * @route GET /api/v1/posts/:slug
+ * @protected false
  */
 const userPosts = asyncHandler(async (req, res) => {
-  const slug = req.params.slug;
-  const posts = Post.find({ slug });
-  res.status(200);
-  res.json(posts);
+  const slug = req.params.user_slug;
+
+  const user = await User.find({ slug });
+  if (!user) {
+    res.status(400);
+    throw new Error('user with that slug does not exist');
+  }
+
+  const posts = await Post.find({ userSlug: slug });
+  let cleanedPosts = [];
+  posts.forEach((post) => cleanedPosts.push(cleanPost(post)));
+  res.status(200).json(cleanedPosts);
 });
 
 module.exports = { createPost, deletePost, updatePost, viewPost, userPosts };
