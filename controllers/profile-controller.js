@@ -58,7 +58,6 @@ const updateProfile = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('invalid email provided');
   }
-  console.log(user);
 
   if (email !== user.email) {
     await ensureEmailIsUnique(req, res, email);
@@ -76,7 +75,6 @@ const updateProfile = asyncHandler(async (req, res) => {
   if (!updatedUser) {
     res.status(400).json({ error: 'could not update user' });
   } else {
-    console.log(updatedUser);
     const updated = { username, email };
     res.status(200).json(updated);
   }
