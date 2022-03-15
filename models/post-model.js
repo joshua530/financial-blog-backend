@@ -21,6 +21,7 @@ const postSchema = mongoose.Schema({
     default: Date.now
   },
   userSlug: { type: String, required: true },
+  userName: { type: String, required: true },
   slug: { type: String, unique: true, required: true }
 });
 
