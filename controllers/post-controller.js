@@ -2,8 +2,12 @@ const asyncHandler = require('express-async-handler');
 const Post = require('../models/post-model');
 const User = require('../models/user-model');
 const Comment = require('../models/comment-model');
-const AutoIncrement = require('../models/autoincrement-model');
-const { createSlug, randomToken } = require('../utils/models');
+const {
+  randomToken,
+  nextPostId,
+  incrementPostId,
+  cleanPost
+} = require('../utils/models');
 
 /**
  * @does creates new post
@@ -50,57 +54,6 @@ const createPost = asyncHandler(async (req, res) => {
   res.status(200).json(post);
 });
 
-/** Formats post data */
-const cleanPost = (post) => {
-  let newPost = {};
-  Object.assign(newPost, post.toJSON());
-  newPost['id'] = post['id'];
-  delete newPost['_id'];
-  newPost['datePosted'] = formatDate(post['datePosted']);
-  newPost['dateUpdated'] = formatDate(post['dateUpdated']);
-  delete newPost['__v'];
-  return newPost;
-};
-
-function formatDate(timeString) {
-  const current = new Date(timeString);
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-  const year = current.getFullYear();
-  const month = months[current.getMonth()];
-  const day = current.getDate();
-
-  const formatted = `${day} ${month}, ${year}`;
-  return formatted;
-}
-
-const nextPostId = async () => {
-  let current = await AutoIncrement.findOne({ collectionName: 'posts' });
-  if (!current) {
-    current = await AutoIncrement.create({ collectionName: 'posts' });
-  }
-  return current.currentId;
-};
-
-const incrementPostId = async (currentId) => {
-  await AutoIncrement.findOneAndUpdate(
-    { collectionName: 'posts' },
-    { currentId: currentId + 1 }
-  );
-};
-
 /**
  * @does gets post data
  * @route GET /api/v1/posts/:post_slug
@@ -135,7 +88,7 @@ const updatePost = asyncHandler(async (req, res) => {
   let post = await Post.findOne({ slug });
   if (!post) {
     res.status(400);
-    throw new Error('Post with slug "' + slug + '" does not exist');
+    throw new Error("Post with slug '" + slug + "' does not exist");
   }
   const userSlug = req.userSlug;
   if (post.userSlug !== userSlug) {

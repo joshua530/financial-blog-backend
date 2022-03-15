@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const AutoIncrement = require('../models/autoincrement-model');
 
 /************ user model ************/
 /**
@@ -30,6 +31,58 @@ const ensureUsernameIsUnique = async (req, res, username) => {
   }
 };
 
+/**************** post model ***************/
+/** Formats post data */
+const cleanPost = (post) => {
+  let newPost = {};
+  Object.assign(newPost, post.toJSON());
+  newPost['id'] = post['id'];
+  delete newPost['_id'];
+  newPost['datePosted'] = formatDate(post['datePosted']);
+  newPost['dateUpdated'] = formatDate(post['dateUpdated']);
+  delete newPost['__v'];
+  return newPost;
+};
+
+function formatDate(timeString) {
+  const current = new Date(timeString);
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  const year = current.getFullYear();
+  const month = months[current.getMonth()];
+  const day = current.getDate();
+
+  const formatted = `${day} ${month}, ${year}`;
+  return formatted;
+}
+
+const nextPostId = async () => {
+  let current = await AutoIncrement.findOne({ collectionName: 'posts' });
+  if (!current) {
+    current = await AutoIncrement.create({ collectionName: 'posts' });
+  }
+  return current.currentId;
+};
+
+const incrementPostId = async (currentId) => {
+  await AutoIncrement.findOneAndUpdate(
+    { collectionName: 'posts' },
+    { currentId: currentId + 1 }
+  );
+};
+
 /**************** general ****************/
 const createSlug = (name) => {
   return name.replace(/\s+/g, '-');
@@ -46,5 +99,8 @@ module.exports = {
   ensureEmailIsUnique,
   ensureUsernameIsUnique,
   createSlug,
-  randomToken
+  randomToken,
+  cleanPost,
+  nextPostId,
+  incrementPostId
 };
