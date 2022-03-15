@@ -30,13 +30,21 @@ const ensureUsernameIsUnique = async (req, res, username) => {
   }
 };
 
+/**************** general ****************/
 const createSlug = (name) => {
   return name.replace(/\s+/g, '-');
+};
+
+const randomToken = () => {
+  const tok = Math.random().toString(36).substring(2);
+  const tok2 = Math.random().toString(36).substring(2);
+  return tok + tok2;
 };
 
 module.exports = {
   cleanUser,
   ensureEmailIsUnique,
   ensureUsernameIsUnique,
-  createSlug
+  createSlug,
+  randomToken
 };
