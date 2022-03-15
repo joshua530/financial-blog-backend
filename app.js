@@ -12,8 +12,10 @@ connectDb();
 app.use(express.json());
 
 app.use('/api/v1/about', require('./routes/about-route'));
+app.use('/api/v1/login', require('./routes/login-route'));
 app.use('/api/v1/profile', require('./routes/profile-routes'));
 app.use('/api/v1/sign-up', require('./routes/sign-up-routes'));
+
 app.use(errorHandler);
 
 const port = process.env.PORT || 5000;

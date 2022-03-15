@@ -1,18 +1,15 @@
 const asyncHandler = require('express-async-handler');
 const crypto = require('crypto');
-const {
-  secretKey,
-  numIterations,
-  keyLength,
-  algoUsed
-} = require('../config/secret-key');
+const { secretKey } = require('../config/secret-key');
 const User = require('../models/user-model');
 const passwordHash = require('../utils/security');
 const { cleanUser } = require('../utils/models');
-const { jwt } = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 /**
- * POST /api/v1/login
+ * @does logs in the user
+ * @route POST /api/v1/login
+ * @protected false
  */
 const login = asyncHandler(async (req, res) => {
   const username = req.body.username
@@ -38,11 +35,12 @@ const login = asyncHandler(async (req, res) => {
   }
 
   user = cleanUser(user);
-  const token = jwt;
+  const token = jwt.sign({ user_slug: user.slug }, secretKey, {
+    expiresIn: '1d'
+  });
+  user.token = token;
 
-  res.status(200);
-  //TODO return some authentication details that the user can store
-  // preferrably a cookie / token / oauth
+  res.status(200).json(user);
 });
 
 /**
