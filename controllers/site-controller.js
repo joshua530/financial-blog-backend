@@ -1,6 +1,31 @@
-/** provides information to be sent to the about and home pages*/
-const home = (req, res) => {};
+const asyncHandler = require('express-async-handler');
+const Post = require('../models/post-model');
+const { cleanPost } = require('../utils/models');
 
+/**
+ * @does fetches home page
+ * @path /api/v1/home
+ * @protected false
+ */
+const home = asyncHandler(async (req, res) => {
+  const imageUrl = '<img url>';
+  const introText = 'Welcome to our site where people share financial ideas';
+  const posts = await Post.find().limit(10).sort({ _id: 'desc' });
+
+  const latestPosts = [];
+  posts.forEach((post) => {
+    latestPosts.push(cleanPost(post));
+  });
+
+  const resData = { imageUrl, introText, latestPosts };
+  res.status(200).json(resData);
+});
+
+/**
+ * @does fetches about page
+ * @path /api/v1/about
+ * @protected false
+ */
 const about = (req, res) => {
   const aboutPage = {
     welcomeText: 'Welcome to our site where people share financial ideas',
