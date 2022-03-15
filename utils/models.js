@@ -30,4 +30,13 @@ const ensureUsernameIsUnique = async (req, res, username) => {
   }
 };
 
-module.exports = { cleanUser, ensureEmailIsUnique, ensureUsernameIsUnique };
+const createSlug = (name) => {
+  return name.replace(/\s+/g, '-');
+};
+
+module.exports = {
+  cleanUser,
+  ensureEmailIsUnique,
+  ensureUsernameIsUnique,
+  createSlug
+};
