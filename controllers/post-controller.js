@@ -50,6 +50,7 @@ const createPost = asyncHandler(async (req, res) => {
   res.status(200).json(post);
 });
 
+/** Formats post data */
 const cleanPost = (post) => {
   let newPost = {};
   Object.assign(newPost, post.toJSON());
@@ -60,9 +61,9 @@ const cleanPost = (post) => {
   delete newPost['__v'];
   return newPost;
 };
+
 function formatDate(timeString) {
   const current = new Date(timeString);
-  // DD month YYYY H:MM
   const months = [
     'January',
     'February',
@@ -111,11 +112,12 @@ const viewPost = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('post slug cannot be empty');
   }
-  const post = await Post.findOne({ slug });
+  let post = await Post.findOne({ slug });
   if (!post) {
     res.status(400);
     throw new Error('post with given slug does not exist');
   }
+  post = cleanPost(post);
   const comments = await Comment.find({ postSlug: slug });
   const response = { post, comments };
   res.status(200).json(response);
