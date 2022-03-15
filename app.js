@@ -17,6 +17,7 @@ app.use('/api/v1/about', require('./routes/about-route'));
 app.use('/api/v1/login', require('./routes/login-route'));
 app.use('/api/v1/profile', require('./routes/profile-routes'));
 app.use('/api/v1/sign-up', require('./routes/sign-up-routes'));
+app.use('*', require('./routes/not-found-route'));
 
 app.use(errorHandler);
 
