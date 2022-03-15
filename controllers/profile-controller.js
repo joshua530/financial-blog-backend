@@ -26,7 +26,6 @@ const viewProfile = asyncHandler(async (req, res) => {
 
 /**
  * @does updates user profile
- * @route GET /api/v1/profile/:slug/update
  * @route PUT /api/v1/profile/:slug/update
  * @protected true
  */
