@@ -79,17 +79,26 @@ const incrementCommentId = async (currentId) => {
 };
 
 /**
- * POST /api/v1/comments/delete
+ * @does deletes comment
+ * @route DELETE /api/v1/comments/delete/:id
+ * @protected true
  */
-const deleteComment = (req, res) => {
-  const _id = req.body.id;
-  Comment.remove({ _id }, (err) => {
-    if (err) {
-      res.status(400);
-      throw new Error('Comment with that id does not exist');
-    }
-    res.status(200);
-  });
-};
+const deleteComment = asyncHandler(async (req, res) => {
+  const commentId = req.params.id;
+  const userSlug = req.userSlug;
+
+  const comment = await Comment.findOne({ _id: commentId });
+  if (!comment) {
+    res.status(400);
+    throw new Error('bad comment id');
+  }
+  if (comment.userSlug !== userSlug) {
+    res.status(403);
+    throw new Error('403, forbidden');
+  }
+
+  await Comment.findByIdAndDelete(commentId);
+  res.status(200).send();
+});
 
 module.exports = { createComment, deleteComment };
