@@ -7,17 +7,19 @@ const authenticate = (req, res, next) => {
     res.status(401).json({ error: 'token required for authentication' });
     return;
   }
-  try {
-    const decoded = jwt.verify(token, secretKey);
-    const userSlug = decoded['user_slug'];
-    const requestSlug = req.params.slug;
-    if (userSlug !== requestSlug) {
-      res.status(403).json({ error: 'invalid token' });
+  if (req.params.slug) {
+    try {
+      const decoded = jwt.verify(token, secretKey);
+      const userSlug = decoded['user_slug'];
+      const requestSlug = req.params.slug;
+      if (userSlug !== requestSlug) {
+        res.status(403).json({ error: 'invalid token' });
+        return;
+      }
+    } catch (err) {
+      res.status(401).json({ error: 'invalid token' });
       return;
     }
-  } catch (err) {
-    res.status(401).json({ error: 'invalid token' });
-    return;
   }
   next();
 };
