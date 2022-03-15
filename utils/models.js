@@ -1,3 +1,5 @@
+const User = require('../models/user-model');
+
 /************ user model ************/
 /**
  * removes sensitive data that shouldn't be sent to the front end
