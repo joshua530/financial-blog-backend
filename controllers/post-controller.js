@@ -6,10 +6,11 @@ const AutoIncrement = require('../models/autoincrement-model');
 const { createSlug, randomToken } = require('../utils/models');
 
 /**
- * POST /api/v1/posts/new
+ * @does creates new post
+ * @route POST /api/v1/posts/new
+ * @protected true
  */
 const createPost = asyncHandler(async (req, res) => {
-  //TODO is user authenticated?
   const title = req.body.title ? req.body.title.trim() : req.body.title;
   const content = req.body.content ? req.body.content.trim() : req.body.content;
 
@@ -31,7 +32,7 @@ const createPost = asyncHandler(async (req, res) => {
   const nextId = await nextPostId();
   const slug = randomToken();
   const userName = user.username;
-  const post = await Post.create({
+  let post = await Post.create({
     title,
     content,
     userSlug,
@@ -45,15 +46,44 @@ const createPost = asyncHandler(async (req, res) => {
     throw new Error('cannot create post at this time');
   }
   await incrementPostId(nextId);
+  post = cleanPost(post);
   res.status(200).json(post);
 });
 
 const cleanPost = (post) => {
   let newPost = {};
-  Object.assign(newPost, post);
+  Object.assign(newPost, post.toJSON());
   newPost['id'] = post['id'];
-  newPost;
+  delete newPost['_id'];
+  newPost['datePosted'] = formatDate(post['datePosted']);
+  newPost['dateUpdated'] = formatDate(post['dateUpdated']);
+  delete newPost['__v'];
+  return newPost;
 };
+function formatDate(timeString) {
+  const current = new Date(timeString);
+  // DD month YYYY H:MM
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December'
+  ];
+  const year = current.getFullYear();
+  const month = months[current.getMonth()];
+  const day = current.getDate();
+
+  const formatted = `${day} ${month}, ${year}`;
+  return formatted;
+}
 
 const nextPostId = async () => {
   let current = await AutoIncrement.findOne({ collectionName: 'posts' });
@@ -71,7 +101,9 @@ const incrementPostId = async (currentId) => {
 };
 
 /**
- * GET /api/v1/posts/:slug
+ * @does gets post data
+ * @route GET /api/v1/posts/:slug
+ * @protected false
  */
 const viewPost = asyncHandler(async (req, res) => {
   const slug = req.params.slug;
