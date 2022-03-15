@@ -13,6 +13,8 @@ connectDb();
 app.use(express.json());
 app.use(
   [
+    '/api/v1/comments/create',
+    '/api/v1/comments/delete',
     '/api/v1/profile/:slug/update',
     '/api/v1/profile/:slug/update-password',
     '/api/v1/posts/new',
@@ -23,6 +25,7 @@ app.use(
 );
 
 app.use('/api/v1/about', require('./routes/about-route'));
+app.use('/api/v1/comments', require('./routes/comment-routes'));
 app.use('/api/v1/login', require('./routes/login-route'));
 app.use('/api/v1/posts', require('./routes/post-routes'));
 app.use('/api/v1/profile', require('./routes/profile-routes'));
