@@ -2,6 +2,8 @@ const asyncHandler = require('express-async-handler');
 const Post = require('../models/post-model');
 const User = require('../models/user-model');
 const Comment = require('../models/comment-model');
+const AutoIncrement = require('../models/autoincrement-model');
+const { createSlug, randomToken } = require('../utils/models');
 
 /**
  * POST /api/v1/posts/new
@@ -19,23 +21,54 @@ const createPost = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('Post content cannot be empty');
   }
-  const userId = 0; // get user id from authentication means
-  const user = User.findOne({ id: userId });
+
+  const userSlug = req.userSlug;
+  const user = await User.findOne({ slug: userSlug });
   if (!user) {
     res.status(401);
-    throw new Error('User is not authenticated');
+    throw new Error('Invalid authentication token');
   }
-  Post.create(
-    { title, content, userId, datePosted: Date.now() },
-    (err, newPost) => {
-      if (err) {
-        res.status(400);
-        throw new Error(err.message);
-      }
-      res.status(200).json(newPost);
-    }
-  );
+  const nextId = await nextPostId();
+  const slug = randomToken();
+  const userName = user.username;
+  const post = await Post.create({
+    title,
+    content,
+    userSlug,
+    datePosted: Date.now(),
+    slug,
+    userName,
+    _id: nextId
+  });
+  if (!post) {
+    res.status(400);
+    throw new Error('cannot create post at this time');
+  }
+  await incrementPostId(nextId);
+  res.status(200).json(post);
 });
+
+const cleanPost = (post) => {
+  let newPost = {};
+  Object.assign(newPost, post);
+  newPost['id'] = post['id'];
+  newPost;
+};
+
+const nextPostId = async () => {
+  let current = await AutoIncrement.findOne({ collectionName: 'posts' });
+  if (!current) {
+    current = await AutoIncrement.create({ collectionName: 'posts' });
+  }
+  return current.currentId;
+};
+
+const incrementPostId = async (currentId) => {
+  await AutoIncrement.findOneAndUpdate(
+    { collectionName: 'posts' },
+    { currentId: currentId + 1 }
+  );
+};
 
 /**
  * GET /api/v1/posts/:slug
