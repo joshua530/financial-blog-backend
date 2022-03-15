@@ -9,10 +9,8 @@ const authenticate = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, secretKey);
-    console.log(decoded);
     const userSlug = decoded['user_slug'];
     const requestSlug = req.params.slug;
-    console.log(requestSlug);
     if (userSlug !== requestSlug) {
       res.status(403).json({ error: 'invalid token' });
       return;
