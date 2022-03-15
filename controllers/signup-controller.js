@@ -5,7 +5,8 @@ const passwordHash = require('../utils/security');
 const {
   cleanUser,
   ensureEmailIsUnique,
-  ensureUsernameIsUnique
+  ensureUsernameIsUnique,
+  createSlug
 } = require('../utils/models');
 
 /**
@@ -64,7 +65,7 @@ const signUp = asyncHandler(async (req, res) => {
     username,
     email,
     password: passwordHash(password),
-    slug: username
+    slug: createSlug(username)
   });
 
   // increment user id
