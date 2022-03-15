@@ -103,11 +103,11 @@ const incrementPostId = async (currentId) => {
 
 /**
  * @does gets post data
- * @route GET /api/v1/posts/:slug
+ * @route GET /api/v1/posts/:post_slug
  * @protected false
  */
 const viewPost = asyncHandler(async (req, res) => {
-  const slug = req.params.slug;
+  const slug = req.params.post_slug;
   if (!slug) {
     res.status(400);
     throw new Error('post slug cannot be empty');
@@ -124,22 +124,31 @@ const viewPost = asyncHandler(async (req, res) => {
 });
 
 /**
- * PUT /api/v1/post/:slug/update
+ * @does updates post data
+ * @route PUT /api/v1/post/:post_slug/update
+ * @protected true
  */
 const updatePost = asyncHandler(async (req, res) => {
-  //TODO authenticate user
-  // check if user is owner
   const title = req.body.title ? req.body.title.trim() : req.body.title;
   const content = req.body.content ? req.body.content.trim() : req.body.content;
-  const slug = req.body.slug;
-  const post = await Post.findOne({ slug });
+  const slug = req.params.post_slug;
+  let post = await Post.findOne({ slug });
   if (!post) {
     res.status(400);
-    throw new Error('Post with slug ' + slug + ' does not exist');
+    throw new Error('Post with slug "' + slug + '" does not exist');
   }
+  const userSlug = req.userSlug;
+  if (post.userSlug !== userSlug) {
+    res.status(403).send('403 forbidden');
+    return;
+  }
+
   post.title = title;
   post.content = content;
+  post.dateUpdated = Date.now();
   await post.save();
+
+  post = cleanPost(post);
   res.status(200).json(post);
 });
 

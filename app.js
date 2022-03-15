@@ -11,7 +11,14 @@ connectDb();
 
 // middleware
 app.use(express.json());
-app.use(['/api/v1/profile/:slug/update', '/api/v1/posts/new'], authMiddleware);
+app.use(
+  [
+    '/api/v1/profile/:slug/update',
+    '/api/v1/posts/new',
+    '/api/v1/posts/:post_slug/update'
+  ],
+  authMiddleware
+);
 
 app.use('/api/v1/about', require('./routes/about-route'));
 app.use('/api/v1/login', require('./routes/login-route'));
