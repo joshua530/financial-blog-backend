@@ -6,6 +6,7 @@ const {
   ensureUsernameIsUnique
 } = require('../utils/models');
 const jwt = require('jsonwebtoken');
+const passwordHash = require('../utils/security');
 
 /**
  * @does fetches user profile
@@ -25,6 +26,33 @@ const viewProfile = asyncHandler(async (req, res) => {
 });
 
 /**
+ * @does updates user password
+ * @route PUT /api/v1/profile/:slug/update-password
+ * @protected true
+ */
+const updatePassword = asyncHandler(async (req, res) => {
+  const password = req.body.password
+    ? req.body.password.trim()
+    : req.body.password;
+  if (!password) {
+    res.status(400);
+    throw new Error('User password cannot be empty');
+  }
+  if (password.length < 8) {
+    res.status(400);
+    throw new Error('Password must be at least 8 characters long');
+  }
+  const slug = req.params.slug;
+  const hash = passwordHash(password);
+  const user = await User.updateOne({ slug }, { password: hash });
+  if (!user.acknowledged) {
+    res.status(400);
+    throw new Error('Cannot update password at this time, try again later');
+  }
+  res.status(200).send();
+});
+
+/**
  * @does updates user profile
  * @route PUT /api/v1/profile/:slug/update
  * @protected true
@@ -41,10 +69,10 @@ const updateProfile = asyncHandler(async (req, res) => {
     throw new Error('User with that slug does not exist');
   }
 
-  const username =
-    req.body.username === null ? req.body.username : req.body.username.trim();
-  const email =
-    req.body.email === null ? req.body.email : req.body.email.trim();
+  const username = req.body.username
+    ? req.body.username.trim()
+    : req.body.username;
+  const email = req.body.email ? req.body.email.trim() : req.body.email;
   if (!username) {
     res.status(400);
     throw new Error('Username cannot be empty');
@@ -79,4 +107,4 @@ const updateProfile = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { viewProfile, updateProfile };
+module.exports = { viewProfile, updateProfile, updatePassword };
