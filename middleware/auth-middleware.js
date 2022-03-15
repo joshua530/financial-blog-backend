@@ -7,19 +7,25 @@ const authenticate = (req, res, next) => {
     res.status(401).json({ error: 'token required for authentication' });
     return;
   }
-  if (req.params.slug) {
-    try {
-      const decoded = jwt.verify(token, secretKey);
-      const userSlug = decoded['user_slug'];
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    const userSlug = decoded['user_slug'];
+    if (req.params.slug) {
+      // request has user slug in url
       const requestSlug = req.params.slug;
       if (userSlug !== requestSlug) {
         res.status(403).json({ error: 'invalid token' });
         return;
       }
-    } catch (err) {
-      res.status(401).json({ error: 'invalid token' });
-      return;
+    } else {
+      // request uses user slug in token for interacting with resources,
+      // extract it so that it can be used wherever it is required
+      req.userSlug = userSlug;
     }
+  } catch (err) {
+    res.status(401).json({ error: 'invalid token' });
+    return;
   }
   next();
 };
