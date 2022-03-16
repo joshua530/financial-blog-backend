@@ -83,6 +83,17 @@ const incrementPostId = async (currentId) => {
   );
 };
 
+//############### comment model ################
+const cleanComment = (comment) => {
+  let tmp = {};
+  Object.assign(tmp, comment.toJSON());
+  delete tmp['__v'];
+  tmp['id'] = tmp['_id'];
+  delete tmp['_id'];
+  delete tmp['postSlug'];
+  return tmp;
+};
+
 /**************** general ****************/
 const createSlug = (name) => {
   return name.replace(/\s+/g, '-');
@@ -102,5 +113,6 @@ module.exports = {
   randomToken,
   cleanPost,
   nextPostId,
-  incrementPostId
+  incrementPostId,
+  cleanComment
 };

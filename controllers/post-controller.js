@@ -6,7 +6,8 @@ const {
   randomToken,
   nextPostId,
   incrementPostId,
-  cleanPost
+  cleanPost,
+  cleanComment
 } = require('../utils/models');
 
 /**
@@ -72,7 +73,9 @@ const viewPost = asyncHandler(async (req, res) => {
   }
   post = cleanPost(post);
   const comments = await Comment.find({ postSlug: slug });
-  const response = { post, comments };
+  let cleanComments = [];
+  comments.forEach((comment) => cleanComments.push(cleanComment(comment)));
+  const response = { post, comments: cleanComments };
   res.status(200).json(response);
 });
 
