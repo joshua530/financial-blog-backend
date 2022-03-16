@@ -4,6 +4,7 @@ const errorHandler = require('./middleware/error-handler');
 const dotenv = require('dotenv').config();
 const connectDb = require('./config/db');
 const authMiddleware = require('./middleware/auth-middleware');
+const headerMiddleware = require('./middleware/headers-middleware');
 
 const app = express();
 
@@ -11,6 +12,7 @@ connectDb();
 
 // middleware
 app.use(express.json());
+app.use(headerMiddleware);
 app.use(
   [
     '/api/v1/comments/create',
