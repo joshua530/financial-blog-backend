@@ -1,4 +1,5 @@
 const User = require('../models/user-model');
+const Post = require('../models/post-model');
 const asyncHandler = require('express-async-handler');
 const {
   cleanUser,
@@ -22,6 +23,8 @@ const viewProfile = asyncHandler(async (req, res) => {
     throw new Error('User with that slug does not exist');
   }
   user = cleanUser(user);
+  const numPosts = await Post.count({ userSlug: user.slug });
+  user.numPosts = numPosts;
   res.status(200).json(user);
 });
 
