@@ -49,7 +49,6 @@ const cleanPost = (post, truncateContent = false) => {
   newPost['dateUpdated'] = formatDate(post['dateUpdated']);
   let content = newPost['content'];
   if (truncateContent && content.length > 30) {
-    console.log(content);
     content = content.substr(0, 100);
     content = content + '...';
   }
