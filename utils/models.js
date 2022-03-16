@@ -32,14 +32,28 @@ const ensureUsernameIsUnique = async (req, res, username) => {
 };
 
 /**************** post model ***************/
-/** Formats post data */
-const cleanPost = (post) => {
+/**
+ * Formats post data
+ *
+ * @param post the post to be shortened
+ * @param truncateContent boolean indicating whether content should be shortened
+ *
+ * @return formatted post
+ */
+const cleanPost = (post, truncateContent = false) => {
   let newPost = {};
   Object.assign(newPost, post.toJSON());
   newPost['id'] = post['id'];
   delete newPost['_id'];
   newPost['datePosted'] = formatDate(post['datePosted']);
   newPost['dateUpdated'] = formatDate(post['dateUpdated']);
+  let content = newPost['content'];
+  if (truncateContent && content.length > 30) {
+    console.log(content);
+    content = content.substr(0, 100);
+    content = content + '...';
+  }
+  newPost['content'] = content;
   delete newPost['__v'];
   return newPost;
 };

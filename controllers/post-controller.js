@@ -145,7 +145,7 @@ const userPosts = asyncHandler(async (req, res) => {
 
   const posts = await Post.find({ userSlug: slug });
   let cleanedPosts = [];
-  posts.forEach((post) => cleanedPosts.push(cleanPost(post)));
+  posts.forEach((post) => cleanedPosts.push(cleanPost(post, true)));
   res.status(200).json(cleanedPosts);
 });
 

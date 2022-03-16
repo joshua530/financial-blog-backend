@@ -14,7 +14,7 @@ const home = asyncHandler(async (req, res) => {
 
   const latestPosts = [];
   posts.forEach((post) => {
-    latestPosts.push(cleanPost(post));
+    latestPosts.push(cleanPost(post, true));
   });
 
   const resData = { imageUrl, introText, latestPosts };
