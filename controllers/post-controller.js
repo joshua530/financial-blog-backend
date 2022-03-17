@@ -81,7 +81,7 @@ const viewPost = asyncHandler(async (req, res) => {
 
 /**
  * @does updates post data
- * @route PUT /api/v1/post/:post_slug/update
+ * @route PUT /api/v1/posts/:post_slug/update
  * @protected true
  */
 const updatePost = asyncHandler(async (req, res) => {
