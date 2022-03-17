@@ -4,6 +4,7 @@ const { secretKey } = require('../config/secret-key');
 const authenticate = (req, res, next) => {
   if (req.method === 'OPTIONS') {
     next();
+    return;
   }
 
   const token = req.body.token;
