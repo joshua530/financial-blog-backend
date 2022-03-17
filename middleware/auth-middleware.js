@@ -2,6 +2,10 @@ const jwt = require('jsonwebtoken');
 const { secretKey } = require('../config/secret-key');
 
 const authenticate = (req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    next();
+  }
+
   const token = req.body.token;
   if (!token) {
     res.status(401).json({ error: 'token required for authentication' });
