@@ -9,7 +9,8 @@ const { cleanPost } = require('../utils/models');
  */
 const home = asyncHandler(async (req, res) => {
   const imageUrl = '<img url>';
-  const introText = 'Welcome to our site where people share financial ideas';
+  const introText =
+    'Welcome to <strong>financialblog.com</strong> where people share financial ideas';
   const posts = await Post.find().limit(10).sort({ _id: 'desc' });
 
   const latestPosts = [];
@@ -28,7 +29,8 @@ const home = asyncHandler(async (req, res) => {
  */
 const about = (req, res) => {
   const aboutPage = {
-    welcomeText: 'Welcome to our site where people share financial ideas',
+    welcomeText:
+      'Welcome to <strong>financialblog.com</strong> where people share financial ideas',
     aboutText:
       'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Temporibus delectus, provident ab quos unde magnam eos beatae est possimus blanditiis reiciendis et consectetur sit ex quidem veniam. Sapiente, repudiandae temporibus!',
     missionText:
