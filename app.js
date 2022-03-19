@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config();
 const connectDb = require('./config/db');
 const authMiddleware = require('./middleware/auth-middleware');
 const headerMiddleware = require('./middleware/headers-middleware');
+const path = require('path');
 
 const app = express();
 
@@ -26,6 +27,8 @@ app.use(
   authMiddleware
 );
 
+app.use('/static', express.static(path.join(__dirname, 'public')));
+
 app.use('/api/v1/about', require('./routes/about-route'));
 app.use('/api/v1/comments', require('./routes/comment-routes'));
 app.use('/api/v1/home', require('./routes/home-route'));
@@ -33,7 +36,10 @@ app.use('/api/v1/login', require('./routes/login-route'));
 app.use('/api/v1/posts', require('./routes/post-routes'));
 app.use('/api/v1/profile', require('./routes/profile-routes'));
 app.use('/api/v1/sign-up', require('./routes/sign-up-routes'));
-app.use('*', require('./routes/not-found-route'));
+// forward all requests to index.html
+app.use('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
 app.use(errorHandler);
 
