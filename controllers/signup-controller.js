@@ -6,7 +6,7 @@ const {
   cleanUser,
   ensureEmailIsUnique,
   ensureUsernameIsUnique,
-  createSlug
+  randomToken
 } = require('../utils/models');
 
 /**
@@ -44,6 +44,9 @@ const signUp = asyncHandler(async (req, res) => {
     throw new Error('password should be at least 8 characters long');
   }
 
+  await ensureUsernameIsUnique(req, res, username);
+  await ensureEmailIsUnique(req, res, email);
+
   // get current user id
   let userId = await AutoIncrement.findOne({ collectionName: 'user' });
   if (!userId) {
@@ -57,15 +60,12 @@ const signUp = asyncHandler(async (req, res) => {
   }
   const id = userId.currentId;
 
-  await ensureEmailIsUnique(req, res, email);
-  await ensureUsernameIsUnique(req, res, username);
-
   let user = await User.create({
     _id: id,
     username,
     email,
     password: passwordHash(password),
-    slug: createSlug(username)
+    slug: randomToken()
   });
 
   // increment user id
