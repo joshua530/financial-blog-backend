@@ -2,3 +2,7 @@ node_modules
 todo
 data.json
 demo.js
+
+# automation scripts
+build_files
+copy_files
