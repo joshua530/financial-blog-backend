@@ -72,6 +72,8 @@ const viewPost = asyncHandler(async (req, res) => {
     throw new Error('post with given slug does not exist');
   }
   post = cleanPost(post);
+  postUser = await User.findOne({ slug: post.userSlug });
+  post.userName = postUser.username;
   const comments = await Comment.find({ postSlug: slug }).sort({ _id: 'desc' });
   let cleanComments = [];
   comments.forEach((comment) => cleanComments.push(cleanComment(comment)));
