@@ -26,6 +26,8 @@ Signed in users are able to:
 - create, view and delete their posts
 - comment on other user's posts
 
+A test user's credentials can be found in [auth.txt](auth.txt)
+
 Anonymous users on the other hand are only able to view posts and read comments.
 
 ## Usage
