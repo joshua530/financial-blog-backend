@@ -6,3 +6,5 @@ demo.js
 # automation scripts
 build_files
 copy_files
+
+.env
