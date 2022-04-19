@@ -75,8 +75,16 @@ const viewPost = asyncHandler(async (req, res) => {
   postUser = await User.findOne({ slug: post.userSlug });
   post.userName = postUser.username;
   const comments = await Comment.find({ postSlug: slug }).sort({ _id: 'desc' });
-  let cleanComments = [];
-  comments.forEach((comment) => cleanComments.push(cleanComment(comment)));
+  let cleanComments = await Promise.all(
+    comments.map(async (comment) => {
+      if (comment.userName === undefined || comment.userName === null) {
+        const user = await User.findOne({ slug: comment.userSlug });
+        let cleanedComment = cleanComment(comment);
+        cleanedComment.userName = await user.username;
+        return cleanedComment;
+      }
+    })
+  );
   const response = { post, comments: cleanComments };
   res.status(200).json(response);
 });
