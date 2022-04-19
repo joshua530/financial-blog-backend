@@ -4,9 +4,9 @@
 ## Previews
 > [Click here](https://) for live demo
 >
-> ![landing page](https://github.com/joshua530/financial-blog-backend/raw/master/home.png)
+> ![landing page](home.png)
 >
-> ![post creation page](https://github.com/joshua530/financial-blog-backend/raw/master/create-post.png)
+> ![post creation page](create-post.png)
 
 ## Description
 A financial blog application that enables people to share financial ideas\
@@ -15,7 +15,7 @@ Signed in users are able to:
 - create, view and delete their posts
 - comment on other user's posts
 
-Anonymous users on the other hand are only able to view posts and read comments.\
+Anonymous users on the other hand are only able to view posts and read comments.
 
 ## Usage
 ##### Prerequisites
@@ -32,7 +32,7 @@ Clone the repository\
 Open terminal or command line\
 Change directory to the project's root. Type `cd <project root>` and press enter\
 Run `npm install`\
-Run `npm run start`\
+Run `npm run start`
 
 ## Technologies used
 1. node js - express framework for the backend api
@@ -40,5 +40,3 @@ Run `npm run start`\
 3. redux
 4. mongodb for the database
 5. authentication is JWT based
-6. WYSIWYG editor(ckeditor)
-
