@@ -1,4 +1,4 @@
-# Banking application
+# Financial blog application
 ![license](https://img.shields.io/github/license/joshua530/financial-blog-backend?color=blue&style=plastic)
 ***
 ## Previews
@@ -7,6 +7,10 @@
 > ![landing page](home.png)
 >
 > ![post creation page](create-post.png)
+
+## Info
+This is the backend repository of the application.\
+[Link to frontend repository](https://github.com/joshua530/financial-blog-frontend)
 
 ## Description
 A financial blog application that enables people to share financial ideas\
