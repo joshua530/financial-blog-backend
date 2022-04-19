@@ -83,6 +83,7 @@ const viewPost = asyncHandler(async (req, res) => {
         cleanedComment.userName = await user.username;
         return cleanedComment;
       }
+      return comment;
     })
   );
   const response = { post, comments: cleanComments };
