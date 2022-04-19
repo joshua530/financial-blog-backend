@@ -1,6 +1,13 @@
 # Financial blog application
 ![license](https://img.shields.io/github/license/joshua530/financial-blog-backend?color=blue&style=plastic)
 ***
+## Table of contents
+- [Previews](#previews)
+- [Info](#info)
+- [Description](#description)
+- [Usage](#usage)
+- [Technologies used](#technologies-used)
+
 ## Previews
 > [Click here](https://) for live demo
 >
@@ -9,7 +16,7 @@
 > ![post creation page](create-post.png)
 
 ## Info
-This is the backend repository of the application.\
+This is the backend repository of the financial blog application.\
 [Link to frontend repository](https://github.com/joshua530/financial-blog-frontend)
 
 ## Description
