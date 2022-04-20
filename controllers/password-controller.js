@@ -10,7 +10,7 @@ const updatePassword = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error('User slug cannot be empty');
   }
-  //TODO is user authenticated ie is the user the owner of the password?
+
   const user = await User.find({ slug });
   if (!user) {
     res.status(400);
