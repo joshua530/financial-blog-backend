@@ -9,7 +9,7 @@
 - [Technologies used](#technologies-used)
 
 ## Previews
-> [Click here](https://) for live demo
+> [Click here](http://banking-application.centralus.cloudapp.azure.com) for live demo
 >
 > ![landing page](home.png)
 >
