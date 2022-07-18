@@ -9,8 +9,6 @@
 - [Technologies used](#technologies-used)
 
 ## Previews
-> [Click here](http://financial-blog.centralus.cloudapp.azure.com/) for live demo
->
 > ![landing page](home.png)
 >
 > ![post creation page](create-post.png)
